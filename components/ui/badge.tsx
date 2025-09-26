@@ -1,0 +1,2 @@
+import React from 'react'
+export function Badge({children,variant='secondary'}:any){const cls=variant==='destructive'?'bg-red-100 text-red-800':'bg-slate-100 text-slate-900';return <span className={'text-xs px-2 py-0.5 rounded-xl border border-slate-200 '+cls}>{children}</span>}

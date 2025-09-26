@@ -1,0 +1,9 @@
+{
+  "name": "CardiacCriticalCare",
+  "short_name": "CCC UCI",
+  "start_url": "/CardiacCriticalCare_PWA/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "icons": []
+}
