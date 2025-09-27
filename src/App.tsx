@@ -27,14 +27,15 @@ const DOCS = [
     tags: ["Parada","UCI"],
     href: BASE + "docs/Protocolo_parada.pdf",
   },
+  {
+    id: "protocol-SCA",
+    title: "Protocolo SCA",
+    summary: "Manejo, SCA",
+    tags: ["SCA","Unidad Críticos CV"],
+    href: BASE + "docs/Protocolo_SCA.pdf",
+  },
 ];
-{
-  id: "protocol-SCA",
-  title: "Protocolo SCA",
-  summary: "Manejo, SCA",
-  tags: ["SCA","Unidad Críticos CV"],
-  href: BASE + "docs/Protocolo_SCA.pdf",
-});
+
 
 
 const TEACHING: any[] = [];
