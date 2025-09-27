@@ -4,11 +4,15 @@ import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card'
 import { Badge } from './components/ui/badge'
+import GraceCalculator from "./components/scores/GraceCalculator";
 
 const CALCULATORS = [
   { id:'pac-hemo', title:'PAC (Swan‑Ganz): cálculos hemodinámicos', summary:'IMC/SC, CO/CI, SV/SVI, SVR/PVR (dyn/WU), CPO, PAPi, AD/PCP.', tags:['Hemodinámica','Swan‑Ganz','UCI'], href:'#/tool/pac-hemo' },
   { id:'drug-doser', title:'Bombas y dosis – UCI cardiológica', summary:'mL/h por peso y dilución; diluciones locales.', tags:['Fármacos','Bombas','UCI'], href:'#/tool/drug-doser' },
   { id:'heparin-adjust', title:'Heparina no fraccionada – ajuste', summary:'aPTT o anti-Xa → recomendación y nuevo ritmo (mL/h).', tags:['Anticoagulación','UCI'], href:'#/tool/heparin-adjust' },
+  { id:'grace', title:'GRACE (in-hospital) – SCA',
+    summary:'Puntaje numérico + mortalidad intrahospitalaria estimada.',
+    tags:['SCA','Riesgo','UCI'], href:'#/tool/grace' },
 ]
 const FORMS = [{ id:'pericarditis-risk', title:'Pericarditis – estratificación de riesgo', summary:'Criterios y plan sugerido.', tags:['Pericardio'], href:'#/tool/pericarditis-risk' }]
 const BASE = (import.meta as any).env.BASE_URL;
@@ -65,6 +69,8 @@ export default function App(){
   if(view.startsWith('/tool/pac-hemo')) return <PACalcTool goHome={()=>{window.location.hash=''}}/>
   if(view.startsWith('/tool/drug-doser')) return <DrugDoserTool goHome={()=>{window.location.hash=''}}/>
   if(view.startsWith('/tool/heparin-adjust')) return <HeparinAdjustTool goHome={()=>{window.location.hash=''}}/>
+  if(view.startsWith('/tool/grace')) return <GraceTool goHome={()=>{window.location.hash=''}}/>
+
   return (<div className='min-h-screen w-full bg-gradient-to-b from-white to-slate-50'><header className='sticky top-0 z-30 backdrop-blur bg-white/70 border-b'><div className='max-w-6xl mx-auto flex items-center gap-3 p-3'><HeartPulse className='h-6 w-6'/><div className='flex-1'><h1 className='text-xl font-semibold'>CardiacCriticalCare</h1><p className='text-xs text-slate-500'>Portafolio UCI cardiológica • v0.3</p></div><div className='flex items-center gap-2 w-full max-w-md'><div className='relative w-full'><Search className='absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400'/><Input value={q} onChange={(e)=>setQ(e.target.value)} placeholder='Buscar herramienta...' className='pl-8'/></div><Button variant='outline' size='icon' title='Ajustes'><Settings className='h-4 w-4'/></Button></div></div></header><main className='max-w-6xl mx-auto p-4 sm:p-6 space-y-8'>
     {/* --- Pestañas sin componente Tabs (fiable) --- */}
 <div>
@@ -271,6 +277,33 @@ function HeparinAdjustTool({goHome}:{goHome:()=>void}) {
             <div className='text-xs text-slate-500'>
               Objetivo anti-Xa habitual 0.3–0.7 UI/mL (ajústalo a vuestro protocolo). Esta herramienta es de apoyo y no sustituye al juicio clínico.
             </div>
+          </CardContent>
+        </Card>
+      </main>
+    </div>
+  );
+  }
+function GraceTool({goHome}:{goHome:()=>void}) {
+  return (
+    <div className='min-h-screen w-full bg-white'>
+      <header className='border-b sticky top-0 bg-white/70 backdrop-blur z-30'>
+        <div className='max-w-3xl mx-auto flex items-center justify-between p-3'>
+          <div className='flex items-center gap-2'>
+            <HeartPulse className='h-5 w-5'/>
+            <h2 className='font-semibold'>GRACE (in-hospital) – Síndrome Coronario Agudo</h2>
+          </div>
+          <Button variant='outline' size='sm' onClick={goHome}>← Volver</Button>
+        </div>
+      </header>
+
+      <main className='max-w-3xl mx-auto p-4 space-y-6'>
+        {/* Aquí insertamos el componente que ya creaste en src/components/scores/GraceCalculator.tsx */}
+        <Card>
+          <CardHeader>
+            <CardTitle className='text-base'>Calculadora</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <GraceCalculator />
           </CardContent>
         </Card>
       </main>
