@@ -8,6 +8,7 @@ import { Badge } from './components/ui/badge'
 const CALCULATORS = [
   { id:'pac-hemo', title:'PAC (Swan‑Ganz): cálculos hemodinámicos', summary:'IMC/SC, CO/CI, SV/SVI, SVR/PVR (dyn/WU), CPO, PAPi, AD/PCP.', tags:['Hemodinámica','Swan‑Ganz','UCI'], href:'#/tool/pac-hemo' },
   { id:'drug-doser', title:'Bombas y dosis – UCI cardiológica', summary:'mL/h por peso y dilución; diluciones locales.', tags:['Fármacos','Bombas','UCI'], href:'#/tool/drug-doser' },
+  { id:'heparin-adjust', title:'Heparina no fraccionada – ajuste', summary:'aPTT o anti-Xa → recomendación y nuevo ritmo (mL/h).', tags:['Anticoagulación','UCI'], href:'#/tool/heparin-adjust' },
 ]
 const FORMS = [{ id:'pericarditis-risk', title:'Pericarditis – estratificación de riesgo', summary:'Criterios y plan sugerido.', tags:['Pericardio'], href:'#/tool/pericarditis-risk' }]
 const BASE = (import.meta as any).env.BASE_URL;
@@ -63,6 +64,7 @@ export default function App(){
   if(view.startsWith('/tool/pericarditis-risk')) return <PericarditisRiskTool goHome={()=>{window.location.hash=''}}/>
   if(view.startsWith('/tool/pac-hemo')) return <PACalcTool goHome={()=>{window.location.hash=''}}/>
   if(view.startsWith('/tool/drug-doser')) return <DrugDoserTool goHome={()=>{window.location.hash=''}}/>
+  if(view.startsWith('/tool/heparin-adjust')) return <HeparinAdjustTool goHome={()=>{window.location.hash=''}}/>
   return (<div className='min-h-screen w-full bg-gradient-to-b from-white to-slate-50'><header className='sticky top-0 z-30 backdrop-blur bg-white/70 border-b'><div className='max-w-6xl mx-auto flex items-center gap-3 p-3'><HeartPulse className='h-6 w-6'/><div className='flex-1'><h1 className='text-xl font-semibold'>CardiacCriticalCare</h1><p className='text-xs text-slate-500'>Portafolio UCI cardiológica • v0.3</p></div><div className='flex items-center gap-2 w-full max-w-md'><div className='relative w-full'><Search className='absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400'/><Input value={q} onChange={(e)=>setQ(e.target.value)} placeholder='Buscar herramienta...' className='pl-8'/></div><Button variant='outline' size='icon' title='Ajustes'><Settings className='h-4 w-4'/></Button></div></div></header><main className='max-w-6xl mx-auto p-4 sm:p-6 space-y-8'>
     {/* --- Pestañas sin componente Tabs (fiable) --- */}
 <div>
@@ -155,3 +157,123 @@ function PericarditisRiskTool({goHome}:{goHome:()=>void}){const [age,setAge]=use
 function PACalcTool({goHome}:{goHome:()=>void}){const [nhc,setNhc]=useState(''),[initials,setInitials]=useState(''),[weight,setWeight]=useState<any>(70),[height,setHeight]=useState<any>(170),[sbp,setSbp]=useState<any>(100),[dbp,setDbp]=useState<any>(60),[hr,setHr]=useState<any>(80),[rap,setRap]=useState<any>(8),[spap,setSpap]=useState<any>(35),[dpap,setDpap]=useState<any>(18),[mpap,setMpap]=useState<any>(24),[pcwp,setPcwp]=useState<any>(12),[sao2,setSao2]=useState<any>(98),[svo2,setSvo2]=useState<any>(65),[hb,setHb]=useState<any>(13),[co,setCo]=useState<any>(4.5);const n=(x:any)=> (typeof x==='number'&&!isNaN(x)?x:undefined);const W=n(weight)||0,H=n(height)||0,SBP=n(sbp),DBP=n(dbp),HR=n(hr),RAP=n(rap)||0,sPAP=n(spap),dPAP=n(dpap),mPAP=n(mpap),PCWP=n(pcwp);const SaO2=n(sao2),SvO2=n(svo2),HbV=n(hb),CO=n(co);const bmi=W&&H? W/Math.pow(H/100,2):undefined;const bsa=W&&H? 0.007184*Math.pow(W,0.425)*Math.pow(H,0.725):undefined;const MAP=SBP!==undefined&&DBP!==undefined?(SBP+2*DBP)/3:undefined;const TPG=(mPAP!==undefined&&PCWP!==undefined)?(mPAP-PCWP):undefined;const DPG=(dPAP!==undefined&&PCWP!==undefined)?(dPAP-PCWP):undefined;const CI=CO!==undefined&&bsa?CO/bsa:undefined;const SV=CO!==undefined&&HR?(1000*CO)/HR:undefined;const SVI=SV!==undefined&&bsa?SV/bsa:undefined;const SVR=(MAP!==undefined&&CO!==undefined)?80*((MAP-RAP)/CO):undefined;const SVR_WU=(MAP!==undefined&&CO!==undefined)?((MAP-RAP)/CO):undefined;const PVR=(mPAP!==undefined&&PCWP!==undefined&&CO!==undefined)?80*((mPAP-PCWP)/CO):undefined;const PVR_WU=(mPAP!==undefined&&PCWP!==undefined&&CO!==undefined)?((mPAP-PCWP)/CO):undefined;const PAPi=(sPAP!==undefined&&dPAP!==undefined)?(sPAP-dPAP)/(RAP||1):undefined;const AD_over_PCWP=(RAP&&PCWP!==undefined)?RAP/(PCWP||1):undefined;const CPO=(MAP!==undefined&&CO!==undefined)?(MAP*CO/451):undefined;let CO_fick: number|undefined=undefined;if(bsa&&HbV&&SaO2!==undefined&&SvO2!==undefined){const VO2=125*bsa;const CaO2=1.34*HbV*(SaO2/100);const CvO2=1.34*HbV*(SvO2/100);const d=CaO2-CvO2;if(d>0.1) CO_fick=VO2/d/1000;}const normals=[{k:'PAPi',v:'1,3–1,8'},{k:'AD (RAP)',v:'2–8 mmHg'},{k:'mPAP',v:'10–20 mmHg'},{k:'PCP/PAWP',v:'6–12 mmHg'},{k:'TPG',v:'5–8 mmHg'},{k:'SvO₂',v:'60–80 %'},{k:'IC',v:'2,5–4 L/min/m²'},{k:'CPO',v:'0,5–1 W'},{k:'PVR',v:'20–130 dyn·s·cm⁻⁵ (0,25–1,63 WU)'},{k:'SVR',v:'800–1400 dyn·s·cm⁻⁵ (10–17,5 WU)'},{k:'AD/PCP',v:'<0,6'}];const saveCase=()=>{if(!nhc) return alert('Introduce NHC');const p={nhc,initials,weight,height,sbp,dbp,hr,rap,spap,dpap,mpap,pcwp,sao2,svo2,hb,co};localStorage.setItem(`pac:${nhc}`,JSON.stringify(p));alert('Guardado')};const loadCase=()=>{if(!nhc) return alert('Introduce NHC');const raw=localStorage.getItem(`pac:${nhc}`);if(!raw) return alert('No hay datos');try{const p=JSON.parse(raw);setInitials(p.initials||'');setWeight(p.weight||0);setHeight(p.height||0);setSbp(p.sbp||0);setDbp(p.dbp||0);setHr(p.hr||0);setRap(p.rap||0);setSpap(p.spap||0);setDpap(p.dpap||0);setMpap(p.mpap||0);setPcwp(p.pcwp||0);setSao2(p.sao2||0);setSvo2(p.svo2||0);setHb(p.hb||0);setCo(p.co||0);}catch{alert('Error al cargar')}};const exportPDF=()=>window.print();return (<div className='min-h-screen w-full bg-white print:bg-white'><header className='border-b sticky top-0 bg-white/70 backdrop-blur z-30 print:hidden'><div className='max-w-5xl mx-auto flex items-center justify-between p-3'><div className='flex items-center gap-2'><HeartPulse className='h-5 w-5'/><h2 className='font-semibold'>PAC (Swan‑Ganz) – Cálculos hemodinámicos</h2></div><div className='flex gap-2'><Button variant='secondary' size='sm' onClick={saveCase}>Guardar</Button><Button variant='secondary' size='sm' onClick={loadCase}>Cargar</Button><Button variant='default' size='sm' onClick={exportPDF}>Exportar PDF</Button><Button variant='outline' size='sm' onClick={goHome}>← Volver</Button></div></div></header><main className='max-w-5xl mx-auto p-4 space-y-6'><Card><CardHeader><CardTitle className='text-base'>Identificación y antropometría</CardTitle></CardHeader><CardContent className='grid sm:grid-cols-2 gap-3'><FieldRow label='NHC'><Input value={nhc} onChange={e=>setNhc(e.target.value)} placeholder='Historia'/></FieldRow><FieldRow label='Iniciales'><Input value={initials} onChange={e=>setInitials(e.target.value)} placeholder='AA'/></FieldRow><FieldRow label='Peso (kg)'><Input type='number' value={weight} onChange={e=>setWeight(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='Talla (cm)'><Input type='number' value={height} onChange={e=>setHeight(parseFloat(e.target.value||'0'))}/></FieldRow></CardContent></Card><Card><CardHeader><CardTitle className='text-base'>Presiones y CO</CardTitle></CardHeader><CardContent className='grid sm:grid-cols-3 gap-3'><FieldRow label='FC (lpm)'><Input type='number' value={hr} onChange={e=>setHr(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='TAS (mmHg)'><Input type='number' value={sbp} onChange={e=>setSbp(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='TAD (mmHg)'><Input type='number' value={dbp} onChange={e=>setDbp(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='AD/RAP (mmHg)'><Input type='number' value={rap} onChange={e=>setRap(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='sPAP (mmHg)'><Input type='number' value={spap} onChange={e=>setSpap(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='dPAP (mmHg)'><Input type='number' value={dpap} onChange={e=>setDpap(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='mPAP (mmHg)'><Input type='number' value={mpap} onChange={e=>setMpap(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='PCP/PAWP (mmHg)'><Input type='number' value={pcwp} onChange={e=>setPcwp(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='CO (L/min)'><Input type='number' value={co} onChange={e=>setCo(parseFloat(e.target.value||'0'))}/></FieldRow></CardContent></Card><Card><CardHeader><CardTitle className='text-base'>Resultados</CardTitle></CardHeader><CardContent className='grid sm:grid-cols-3 gap-3 text-sm text-slate-600'><div>TAM: <b>{MAP?MAP.toFixed(1):'—'} mmHg</b></div><div>TPG: <b>{TPG!==undefined?TPG.toFixed(1):'—'} mmHg</b></div><div>DPG: <b>{DPG!==undefined?DPG.toFixed(1):'—'} mmHg</b></div><div>SV: <b>{SV?SV.toFixed(0):'—'} mL</b></div><div>SVI: <b>{SVI?SVI.toFixed(0):'—'} mL/m²</b></div><div>CI: <b>{CI?CI.toFixed(2):'—'} L/min/m²</b></div><div>SVR: <b>{SVR?SVR.toFixed(0):'—'} dyn·s·cm⁻⁵</b> (<span>{SVR_WU?SVR_WU.toFixed(1):'—'} WU</span>)</div><div>PVR: <b>{PVR?PVR.toFixed(0):'—'} dyn·s·cm⁻⁵</b> (<span>{PVR_WU?PVR_WU.toFixed(2):'—'} WU</span>)</div><div>PAPi: <b>{PAPi?PAPi.toFixed(2):'—'}</b></div><div>AD/PCP: <b>{AD_over_PCWP?AD_over_PCWP.toFixed(2):'—'}</b></div><div>CPO: <b>{CPO?CPO.toFixed(2):'—'} W</b></div></CardContent></Card></main></div>) }
 
 function DrugDoserTool({goHome}:{goHome:()=>void}){const [weight,setWeight]=useState<any>(70);const [drug,setDrug]=useState<'norepi'|'epi'|'dobut'|'milri10'|'milri20'|'vaso'|'dopa'|'dopa200'|'ntg'|'cisat'|'isop'|'levo'|'morph'|'nipr'|'remi'>('norepi');const [dose,setDose]=useState<any>(0.1);const [amount,setAmount]=useState<any>(25);const [volume,setVolume]=useState<any>(250);const [units,setUnits]=useState<'mcg/kg/min'|'UI/kg/h'|'mcg/min'|'mg/h'|'mcg/kg/h'|'mcg/h'>('mcg/kg/min');const presets:any={norepi:{label:'Noradrenalina 25 mg/250 mL',amount:25,amount_unit:'mg',volume:250,unit:'mcg/kg/min',min:0.02,max:1.0},epi:{label:'Adrenalina 1.6 mg/100 mL',amount:1.6,amount_unit:'mg',volume:100,unit:'mcg/kg/min',min:0.02,max:1.0},dobut:{label:'Dobutamina 500 mg/250 mL',amount:500,amount_unit:'mg',volume:250,unit:'mcg/kg/min',min:2,max:20},milri10:{label:'Milrinona 10 mg/250 mL',amount:10,amount_unit:'mg',volume:250,unit:'mcg/kg/min',min:0.125,max:0.75},milri20:{label:'Milrinona 20 mg/250 mL',amount:20,amount_unit:'mg',volume:250,unit:'mcg/kg/min',min:0.125,max:0.75},vaso:{label:'Vasopresina 40 UI/100 mL',amount:40,amount_unit:'UI',volume:100,unit:'UI/kg/h',min:0.0001,max:0.003},dopa:{label:'Dopamina 400 mg/250 mL',amount:400,amount_unit:'mg',volume:250,unit:'mcg/kg/min',min:2,max:20},dopa200:{label:'Dopamina 200 mg/100 mL',amount:200,amount_unit:'mg',volume:100,unit:'mcg/kg/min',min:2,max:20},ntg:{label:'Nitroglicerina 50 mg/250 mL',amount:50,amount_unit:'mg',volume:250,unit:'mcg/min',min:5,max:200},cisat:{label:'Cisatracurio 200 mg/100 mL',amount:200,amount_unit:'mg',volume:100,unit:'mcg/kg/min',min:0.5,max:5},isop:{label:'Isoproterenol 200 mcg/100 mL',amount:200,amount_unit:'mcg',volume:100,unit:'mcg/min',min:1,max:10},levo:{label:'Levosimendan 22.5 mg/250 mL',amount:22.5,amount_unit:'mg',volume:250,unit:'mcg/kg/min',min:0.05,max:0.2},morph:{label:'Morfina 50 mg/50 mL',amount:50,amount_unit:'mg',volume:50,unit:'mg/h',min:1,max:10},nipr:{label:'Nitroprusiato 50 mg/250 mL',amount:50,amount_unit:'mg',volume:250,unit:'mcg/kg/min',min:0.3,max:10},remi:{label:'Remifentanilo 5 mg/100 mL',amount:5,amount_unit:'mg',volume:100,unit:'mcg/kg/min',min:0.025,max:0.3}};React.useEffect(()=>{const p=presets[drug];setAmount(p.amount);setVolume(p.volume);setUnits(p.unit as any);if(p.unit==='UI/kg/h') setDose(0.0005); else if(p.unit==='mcg/min'||p.unit==='mg/h') setDose(p.min); else setDose(0.1)},[drug]);const n=(x:any)=> (typeof x==='number'&&!isNaN(x)?x:undefined);const W=n(weight)||0,A=n(amount)||0,V=n(volume)||0,D=n(dose);const aunit=presets[drug].amount_unit;let conc_mcg_per_mL:any=undefined,conc_UI_per_mL:any=undefined;if(aunit==='mg') conc_mcg_per_mL=(A*1000)/V; else if(aunit==='mcg') conc_mcg_per_mL=(A)/V; else if(aunit==='UI') conc_UI_per_mL=(A)/V;let mL_per_h:any; if(D&&V&&((conc_mcg_per_mL)||(conc_UI_per_mL))){switch(units){case 'mcg/kg/min':{const mcg_per_min=D*W; mL_per_h=(mcg_per_min/(conc_mcg_per_mL!))*60; break;}case 'mcg/min':{const mcg_per_min=D; mL_per_h=(mcg_per_min/(conc_mcg_per_mL!))*60; break;}case 'UI/kg/h':{const ui_per_h=D*W; mL_per_h=ui_per_h/(conc_UI_per_mL!); break;}case 'mg/h':{const mcg_per_h=D*1000; mL_per_h=mcg_per_h/(conc_mcg_per_mL!); break;}case 'mcg/kg/h':{const mcg_per_h=D*W; mL_per_h=mcg_per_h/(conc_mcg_per_mL!); break;}case 'mcg/h':{const mcg_per_h=D; mL_per_h=mcg_per_h/(conc_mcg_per_mL!); break;}}}const p=presets[drug];const outOfRange=D!==undefined&&((D<p.min)||(D>p.max));const savePreset=()=>{const blob={amount,volume,units,dose};localStorage.setItem(`doser:${drug}`,JSON.stringify(blob));alert('Preset guardado.')};const loadPreset=()=>{const raw=localStorage.getItem(`doser:${drug}`);if(!raw) return alert('No hay preset.');try{const b=JSON.parse(raw);setAmount(b.amount??amount);setVolume(b.volume??volume);setUnits(b.units??units);setDose(b.dose??dose)}catch{alert('Error al cargar')}};return (<div className='min-h-screen w-full bg-white print:bg-white'><header className='border-b sticky top-0 bg-white/70 backdrop-blur z-30 print:hidden'><div className='max-w-3xl mx-auto flex items-center justify-between p-3'><div className='flex items-center gap-2'><HeartPulse className='h-5 w-5'/><h2 className='font-semibold'>Bombas y dosis – UCI cardiológica</h2></div><div className='flex gap-2'><Button variant='secondary' size='sm' onClick={savePreset}>Guardar preset</Button><Button variant='secondary' size='sm' onClick={loadPreset}>Cargar preset</Button><Button variant='outline' size='sm' onClick={goHome}>← Volver</Button></div></div></header><main className='max-w-3xl mx-auto p-4 space-y-6'><Card><CardHeader><CardTitle className='text-base'>Paciente y fármaco</CardTitle></CardHeader><CardContent className='grid sm:grid-cols-2 gap-3'><FieldRow label='Peso (kg)'><Input type='number' value={weight} onChange={(e:any)=>setWeight(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='Fármaco'><select className='border rounded-md h-9 px-2' value={drug} onChange={(e:any)=>setDrug(e.target.value)}><optgroup label='Vasoactivos'><option value='norepi'>Noradrenalina</option><option value='epi'>Adrenalina</option><option value='dopa'>Dopamina 400/250</option><option value='dopa200'>Dopamina 200/100</option><option value='isop'>Isoproterenol</option><option value='vaso'>Vasopresina</option><option value='ntg'>Nitroglicerina</option><option value='nipr'>Nitroprusiato</option></optgroup><optgroup label='Inotropos'><option value='dobut'>Dobutamina</option><option value='milri10'>Milrinona 10/250</option><option value='milri20'>Milrinona 20/250</option><option value='levo'>Levosimendan</option></optgroup><optgroup label='Analgo-sedación / NMB'><option value='remi'>Remifentanilo</option><option value='morph'>Morfina</option><option value='cisat'>Cisatracurio</option></optgroup></select></FieldRow><FieldRow label='Dosis'><Input type='number' value={dose} onChange={(e:any)=>setDose(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='Unidades'><select className='border rounded-md h-9 px-2' value={units} onChange={(e:any)=>setUnits(e.target.value)}><option value='mcg/kg/min'>mcg/kg/min</option><option value='mcg/min'>mcg/min</option><option value='UI/kg/h'>UI/kg/h</option><option value='mg/h'>mg/h</option><option value='mcg/kg/h'>mcg/kg/h</option><option value='mcg/h'>mcg/h</option></select></FieldRow></CardContent></Card><Card><CardHeader><CardTitle className='text-base'>Dilución</CardTitle></CardHeader><CardContent className='grid sm:grid-cols-3 gap-3'><FieldRow label={`Cantidad (${presets[drug].amount_unit==='UI'?'UI':presets[drug].amount_unit})`}><Input type='number' value={amount} onChange={(e:any)=>setAmount(parseFloat(e.target.value||'0'))}/></FieldRow><FieldRow label='Volumen (mL)'><Input type='number' value={volume} onChange={(e:any)=>setVolume(parseFloat(e.target.value||'0'))}/></FieldRow><div className='text-sm text-slate-600 self-center'>Concentración: <b>{presets[drug].amount_unit==='UI'?(conc_UI_per_mL? (conc_UI_per_mL.toFixed(3)+' UI/mL'):'—'):(conc_mcg_per_mL? (conc_mcg_per_mL.toFixed(0)+' mcg/mL'):'—')}</b></div></CardContent><CardContent className='text-xs text-slate-500'>Preset: {presets[drug].label}. Personaliza y guarda para otras diluciones locales.</CardContent></Card><Card><CardHeader><CardTitle className='text-base'>Resultado</CardTitle></CardHeader><CardContent><div className='text-lg'>Velocidad: <b>{mL_per_h? (mL_per_h.toFixed(2)+' mL/h'):'—'}</b></div>{D!==undefined && (<div className={`mt-2 text-sm ${outOfRange? 'text-red-600':'text-slate-600'}`}>Dosis: {D} {units} — Rango habitual {p.min}–{p.max} {units} {outOfRange? '(¡fuera de rango!)':''}</div>)}<div className='mt-2 text-xs text-slate-500'>Guía orientativa. Valida con vuestro protocolo.</div></CardContent></Card></main></div>) }
+
+function HeparinAdjustTool({goHome}:{goHome:()=>void}) {
+  // Entradas
+  const [mode, setMode] = useState<'aptt'|'antiXa'>('aptt'); // qué parámetro usamos
+  const [value, setValue] = useState<any>(70);               // aPTT (s) o anti-Xa (UI/mL)
+  const [rate, setRate]   = useState<any>(10);               // mL/h actuales
+  const [conc, setConc]   = useState<any>(100);              // UI/mL de la perfusión
+  const [weight, setWeight] = useState<any>(75);             // opcional, por si hay bolo por kg (no usado ahora)
+
+  // Mapa de reglas (según tu tabla)
+  // Cada regla devuelve: acción, delta mL/h, suspensión (horas), bolo UI opcional
+  type Rule = { label: string; delta?: number; suspendH?: number; bolusUI?: number; };
+  function decide(v:number, m:'aptt'|'antiXa'): Rule {
+    if (m==='aptt') {
+      if (v < 40)                  return { label:'BOLO 2.500 UI y SUBIR perfusión 3 mL/h', delta:+3, bolusUI:2500 };
+      if (v >=40 && v <=49)        return { label:'SUBIR perfusión 2 mL/h', delta:+2 };
+      if (v >=50 && v <=69)        return { label:'SUBIR perfusión 1 mL/h', delta:+1 };
+      if (v >=70 && v <=110)       return { label:'DEJAR IGUAL', delta:0 };
+      if (v >=111 && v <=120)      return { label:'BAJAR perfusión 1 mL/h', delta:-1 };
+      if (v >=121 && v <=130)      return { label:'SUSPENDER 1h y reiniciar BAJANDO 2 mL/h', delta:-2, suspendH:1 };
+      if (v >=131 && v <=140)      return { label:'SUSPENDER 1h y reiniciar BAJANDO 3 mL/h', delta:-3, suspendH:1 };
+      if (v >=141 && v <=150)      return { label:'SUSPENDER 2h y reiniciar BAJANDO 4 mL/h', delta:-4, suspendH:2 };
+      if (v > 150)                 return { label:'SUSPENDER 2h y reiniciar BAJANDO 5 mL/h', delta:-5, suspendH:2 };
+    } else {
+      // anti-Xa UI/mL (según la imagen)
+      if (v < 0.10)                return { label:'BOLO 2.500 UI y SUBIR perfusión 3 mL/h', delta:+3, bolusUI:2500 };
+      if (v >=0.10 && v <=0.19)    return { label:'SUBIR perfusión 2 mL/h', delta:+2 };
+      if (v >=0.20 && v <=0.29)    return { label:'SUBIR perfusión 1 mL/h', delta:+1 };
+      if (v >=0.30 && v <=0.70)    return { label:'DEJAR IGUAL', delta:0 };
+      if (v > 0.70 && v <=0.79)    return { label:'BAJAR perfusión 1 mL/h', delta:-1 };
+      if (v >=0.80 && v <=0.89)    return { label:'SUSPENDER 1h y reiniciar BAJANDO 2 mL/h', delta:-2, suspendH:1 };
+      if (v >=0.90 && v <=0.99)    return { label:'SUSPENDER 1h y reiniciar BAJANDO 3 mL/h', delta:-3, suspendH:1 };
+      if (v >=1.00 && v <=1.09)    return { label:'SUSPENDER 2h y reiniciar BAJANDO 4 mL/h', delta:-4, suspendH:2 };
+      if (v >=1.10)                return { label:'SUSPENDER 2h y reiniciar BAJANDO 5 mL/h', delta:-5, suspendH:2 };
+    }
+    return { label:'—' };
+  }
+
+  const n=(x:any)=> (typeof x==='number'&&!isNaN(x)?x:undefined);
+  const V = n(value) ?? 0;
+  const R = n(rate)  ?? 0;
+  const C = n(conc)  ?? 0;
+
+  const rule = decide(V, mode);
+  const newRate = (rule.delta!==undefined) ? Math.max(0, R + rule.delta) : undefined;
+
+  // Si hay BOLO, calculamos volumen equivalente solo a título informativo
+  const bolus_mL = (rule.bolusUI && C>0) ? (rule.bolusUI / C) : undefined;
+
+  return (
+    <div className='min-h-screen w-full bg-white print:bg-white'>
+      <header className='border-b sticky top-0 bg-white/70 backdrop-blur z-30 print:hidden'>
+        <div className='max-w-3xl mx-auto flex items-center justify-between p-3'>
+          <div className='flex items-center gap-2'>
+            <HeartPulse className='h-5 w-5'/>
+            <h2 className='font-semibold'>Heparina no fraccionada – Ajuste de perfusión</h2>
+          </div>
+          <Button variant='outline' size='sm' onClick={goHome}>← Volver</Button>
+        </div>
+      </header>
+
+      <main className='max-w-3xl mx-auto p-4 space-y-6'>
+        <Card>
+          <CardHeader><CardTitle className='text-base'>Parámetros</CardTitle></CardHeader>
+          <CardContent className='grid sm:grid-cols-2 gap-3'>
+            <FieldRow label='Parámetro'>
+              <select className='border rounded-md h-9 px-2' value={mode} onChange={(e:any)=>setMode(e.target.value)}>
+                <option value='aptt'>aPTT (segundos)</option>
+                <option value='antiXa'>Anti-Xa (UI/mL)</option>
+              </select>
+            </FieldRow>
+
+            <FieldRow label={mode==='aptt' ? 'aPTT (s)' : 'Anti-Xa (UI/mL)'}>
+              <Input type='number' step={mode==='aptt' ? '1' : '0.01'} value={value} onChange={(e:any)=>setValue(parseFloat(e.target.value||'0'))}/>
+            </FieldRow>
+
+            <FieldRow label='Ritmo actual (mL/h)'>
+              <Input type='number' value={rate} onChange={(e:any)=>setRate(parseFloat(e.target.value||'0'))}/>
+            </FieldRow>
+
+            <FieldRow label='Concentración (UI/mL)'>
+              <Input type='number' value={conc} onChange={(e:any)=>setConc(parseFloat(e.target.value||'0'))}/>
+            </FieldRow>
+
+            <FieldRow label='Peso (kg, opcional)'>
+              <Input type='number' value={weight} onChange={(e:any)=>setWeight(parseFloat(e.target.value||'0'))}/>
+            </FieldRow>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle className='text-base'>Recomendación</CardTitle></CardHeader>
+          <CardContent className='space-y-2 text-slate-700'>
+            <div className='text-lg'>
+              {rule.label !== '—' ? rule.label : 'Introduce valores válidos.'}
+            </div>
+            {rule.bolusUI && (
+              <div className='text-sm'>
+                Bolo sugerido: <b>{rule.bolusUI.toLocaleString()} UI</b>
+                {bolus_mL!==undefined ? <> (~{bolus_mL.toFixed(1)} mL a {C} UI/mL)</> : null}
+              </div>
+            )}
+            {rule.suspendH ? (
+              <div className='text-sm'>Suspender <b>{rule.suspendH} h</b> y reiniciar a:
+                {' '}<b>{newRate!==undefined ? `${newRate.toFixed(1)} mL/h` : '—'}</b>
+              </div>
+            ) : (
+              <div className='text-sm'>Nuevo ritmo:
+                {' '}<b>{newRate!==undefined ? `${newRate.toFixed(1)} mL/h` : '—'}</b>
+              </div>
+            )}
+            <div className='text-xs text-slate-500'>
+              Objetivo anti-Xa habitual 0.3–0.7 UI/mL (ajústalo a vuestro protocolo). Esta herramienta es de apoyo y no sustituye al juicio clínico.
+            </div>
+          </CardContent>
+        </Card>
+      </main>
+    </div>
+  );
+}
