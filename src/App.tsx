@@ -34,8 +34,14 @@ const DOCS = [
     tags: ["SCA","Unidad Críticos CV"],
     href: BASE + "docs/Protocolo_SCA.pdf",
   },
+  {
+    id: "protocol-Reclutamiento_Alveolar",
+    title: "Protocolo reclutamiento alvelorar",
+    summary: "Distrés, Reclutamiento, Alveolar",
+    tags: ["Ventilación","Unidad Críticos CV"],
+    href: BASE + "docs/Protocolo_Reclutamiento_Escalera.pdf",
+  },
 ];
-
 
 
 const TEACHING: any[] = [];
