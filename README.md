@@ -1,6 +1,5 @@
 # CardiacCriticalCare PWA
 
-
 App UCI cardiológica (PAC, Bombas y dosis, Pericarditis) — Vite + React + Tailwind + PWA.
 
 ## Desarrollo
