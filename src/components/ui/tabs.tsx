@@ -1,9 +1,6 @@
 import React from 'react'
 
-/**
- * Tabs simples: value = pestaña activa, onValueChange = cambia pestaña.
- * Pasamos 'current' a los hijos para evitar colisión con 'value'.
- */
+/** Contenedor: inyecta {current, onValueChange} a TODOS los hijos directos */
 export function Tabs({ value, onValueChange, children }: any) {
   return (
     <div>
@@ -14,10 +11,18 @@ export function Tabs({ value, onValueChange, children }: any) {
   )
 }
 
-export function TabsList({ children, className = '' }: any) {
+/** La lista ahora PROPAGA también a sus propios hijos (los Triggers) */
+export function TabsList({
+  children,
+  className = '',
+  current,
+  onValueChange,
+}: any) {
   return (
     <div className={'flex gap-2 rounded-2xl bg-slate-100 p-1 ' + className}>
-      {children}
+      {React.Children.map(children, (c: any) =>
+        React.cloneElement(c, { current, onValueChange })
+      )}
     </div>
   )
 }
@@ -32,7 +37,7 @@ export function TabsTrigger({
   const active = current === val
   return (
     <button
-      onClick={() => onValueChange(val)}
+      onClick={() => onValueChange && onValueChange(val)}
       className={
         'flex-1 rounded-xl px-3 py-2 text-sm ' +
         (active ? 'bg-white shadow' : 'text-slate-600 hover:text-slate-900') +
