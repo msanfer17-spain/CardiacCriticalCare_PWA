@@ -4,7 +4,6 @@ import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card'
 import { Badge } from './components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs'
 
 const CALCULATORS = [
   { id:'pac-hemo', title:'PAC (Swan‑Ganz): cálculos hemodinámicos', summary:'IMC/SC, CO/CI, SV/SVI, SVR/PVR (dyn/WU), CPO, PAPi, AD/PCP.', tags:['Hemodinámica','Swan‑Ganz','UCI'], href:'#/tool/pac-hemo' },
