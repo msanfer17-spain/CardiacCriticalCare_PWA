@@ -11,13 +11,33 @@ const CALCULATORS = [
   { id:'drug-doser', title:'Bombas y dosis – UCI cardiológica', summary:'mL/h por peso y dilución; diluciones locales.', tags:['Fármacos','Bombas','UCI'], href:'#/tool/drug-doser' },
 ]
 const FORMS = [{ id:'pericarditis-risk', title:'Pericarditis – estratificación de riesgo', summary:'Criterios y plan sugerido.', tags:['Pericardio'], href:'#/tool/pericarditis-risk' }]
-const DOCS:any[] = []; const TEACHING:any[] = []
+const BASE = (import.meta as any).env.BASE_URL;
+
+const DOCS = [
+  {
+    id: "protocol-shock",
+    title: "Protocolo Shock Cardiogénico 2025",
+    summary: "Documento interno actualizado",
+    tags: ["Shock","UCI"],
+    href: BASE + "docs/Protocolo_shock_cardiogenico.pdf",
+  },
+  {
+    id: "protocol-parada",
+    title: "Protocolo Parada",
+    summary: "Algoritmo de parada cardiorrespiratoria",
+    tags: ["Parada","UCI"],
+    href: BASE + "docs/Protocolo_parada.pdf",
+  },
+];
+
+const TEACHING: any[] = [];
+
 
 function SectionHeader({ icon: Icon, title, hint }: any){
   return (<div className='flex items-center justify-between mb-4'><div className='flex items-center gap-2'><Icon className='h-5 w-5'/><h3 className='text-lg font-semibold'>{title}</h3></div>{hint?<span className='text-sm text-slate-500'>{hint}</span>:null}</div>)
 }
 function ToolCard({ item }: any){
-  return (<Card className='hover:shadow-md transition-shadow cursor-pointer'><CardHeader><CardTitle className='text-base'>{item.title}</CardTitle></CardHeader><CardContent className='space-y-3'><p className='text-sm text-slate-600'>{item.summary}</p><div className='flex flex-wrap gap-2'>{item.tags.map((t:string)=><Badge key={t}>{t}</Badge>)}</div><div className='pt-1'><Button asChild size='sm'><a href={item.href}>Abrir</a></Button></div></CardContent></Card>)
+  return (<Card className='hover:shadow-md transition-shadow cursor-pointer'><CardHeader><CardTitle className='text-base'>{item.title}</CardTitle></CardHeader><CardContent className='space-y-3'><p className='text-sm text-slate-600'>{item.summary}</p><div className='flex flex-wrap gap-2'>{item.tags.map((t:string)=><Badge key={t}>{t}</Badge>)}</div><div className='pt-1'><Button asChild size='sm'><a href={item.href} target="_blank" rel="noopener noreferrer">Abrir</a></Button></div></CardContent></Card>)
 }
 
 export default function App(){
