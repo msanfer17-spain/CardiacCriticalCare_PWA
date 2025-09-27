@@ -37,7 +37,7 @@ const DOCS = [
   },
   {
     id: "protocol-Reclutamiento_Alveolar",
-    title: "Protocolo reclutamiento alvelorar",
+    title: "Protocolo reclutamiento alveolar",
     summary: "Distrés, Reclutamiento, Alveolar",
     tags: ["Ventilación","Unidad Críticos CV"],
     href: BASE + "docs/Protocolo_Reclutamiento_Escalera.pdf",
