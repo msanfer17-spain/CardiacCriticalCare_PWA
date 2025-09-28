@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card'
 import { Badge } from './components/ui/badge'
 import GraceCalculator from "./components/ui/scores/GraceCalculator";
 import SOFACalculator from "./components/ui/scores/SOFACalculator";
-import ClinicalFrailtyForm from "./components/ui/Forms/ClinicalFrailtyForm";
+import ClinicalFrailtyForm from "./components/ui/forms/ClinicalFrailtyForm";
 
 
 const CALCULATORS = [
