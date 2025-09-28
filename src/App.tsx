@@ -21,10 +21,23 @@ const CALCULATORS = [
   tags:['UCI','Pronóstico'], href:'#/tool/sofa' },
 
 ]
-const FORMS = [{ id:'pericarditis-risk', title:'Pericarditis – estratificación de riesgo', summary:'Criterios y plan sugerido.', tags:['Pericardio'], href:'#/tool/pericarditis-risk' }],
-  { id:'cfs', title:'Clinical Frailty Score (CFS 1–9)',
-  summary:'Clasificación basal de fragilidad con iconos y recomendación.',
-  tags:['Fragilidad','Triaje'], href:'#/tool/cfs' }
+const FORMS = [
+  {
+    id:'pericarditis-risk',
+    title:'Pericarditis – estratificación de riesgo',
+    summary:'Criterios y plan sugerido.',
+    tags:['Pericardio'],
+    href:'#/tool/pericarditis-risk'
+  },
+  {
+    id:'cfs',
+    title:'Clinical Frailty Score (CFS 1–9)',
+    summary:'Clasificación basal de fragilidad con iconos y recomendación.',
+    tags:['Fragilidad','Triaje'],
+    href:'#/tool/cfs'
+  }
+];
+
 
 const BASE = (import.meta as any).env.BASE_URL;
 
