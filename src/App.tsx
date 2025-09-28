@@ -343,7 +343,7 @@ function SOFATool({goHome}:{goHome:()=>void}) {
         <div className='max-w-3xl mx-auto flex items-center justify-between p-3'>
           <div className='flex items-center gap-2'>
             <HeartPulse className='h-5 w-5'/>
-            <h2 className='font-semibold'>SOFA – Secuential Organ Failure Assessment</h2>
+            <h2 className='font-semibold'>SOFA – Sequential Organ Failure Assessment</h2>
           </div>
           <Button variant='outline' size='sm' onClick={goHome}>← Volver</Button>
         </div>
