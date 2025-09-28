@@ -105,10 +105,10 @@ export default function App(){
         {/* Logo corazón estilizado + texto */}
         <div className="flex items-center gap-2">
           <img
-            src={`${import.meta.env.BASE_URL}icon-192.png`}
-            alt="Logo CCC"
-            className="h-8 w-8"
-          />
+  src="/CardiacCriticalCare_PWA/icon-192.png"
+  alt="Logo CCC"
+  className="h-8 w-8"
+/>
           <span className="text-xl font-bold">H. Ramón y Cajal</span>
         </div>
 
