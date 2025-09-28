@@ -97,10 +97,27 @@ export default function App(){
   if(view.startsWith('/tool/sofa')) return <SOFATool goHome={()=>{window.location.hash=''}}/>
   if(view.startsWith('/tool/cfs')) return <CFSTool goHome={()=>{window.location.hash=''}}/>
 
-  return (<div className='min-h-screen w-full bg-gradient-to-b from-white to-slate-50'><header className='sticky top-0 z-30 backdrop-blur bg-white/70 border-b'><div className='max-w-6xl mx-auto flex items-center gap-3 p-3'><HeartPulse className='h-6 w-6'/><div className='flex-1'><<div className="flex items-center space-x-2">
-  <img src="/icon-192.png" alt="Logo" className="h-8 w-8" />
-  <span className="text-xl font-bold">H. Ramón y Cajal</span>
-</div>
+ return (
+  <div className="min-h-screen w-full bg-gradient-to-b from-white to-slate-50">
+    <header className="sticky top-0 z-30 backdrop-blur bg-white/70 border-b">
+      <div className="max-w-6xl mx-auto flex items-center gap-3 p-3">
+
+        {/* Logo corazón estilizado + texto */}
+        <div className="flex items-center gap-2">
+          <img
+            src={`${import.meta.env.BASE_URL}icon-192.png`}
+            alt="Logo CCC"
+            className="h-8 w-8"
+          />
+          <span className="text-xl font-bold">H. Ramón y Cajal</span>
+        </div>
+
+      </div>
+    </header>
+
+    {/* ...resto de tu App */}
+  </div>
+)
 
     {/* --- Pestañas sin componente Tabs (fiable) --- */}
 <div>
