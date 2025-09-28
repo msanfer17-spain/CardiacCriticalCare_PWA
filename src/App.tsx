@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card'
 import { Badge } from './components/ui/badge'
 import GraceCalculator from "./components/ui/scores/GraceCalculator";
 import SOFACalculator from "./components/ui/scores/SOFACalculator";
+import ClinicalFrailtyForm from "./components/ui/forms/ClinicalFrailtyForm";
 
 
 const CALCULATORS = [
@@ -20,7 +21,11 @@ const CALCULATORS = [
   tags:['UCI','Pronóstico'], href:'#/tool/sofa' },
 
 ]
-const FORMS = [{ id:'pericarditis-risk', title:'Pericarditis – estratificación de riesgo', summary:'Criterios y plan sugerido.', tags:['Pericardio'], href:'#/tool/pericarditis-risk' }]
+const FORMS = [{ id:'pericarditis-risk', title:'Pericarditis – estratificación de riesgo', summary:'Criterios y plan sugerido.', tags:['Pericardio'], href:'#/tool/pericarditis-risk' }],
+  { id:'cfs', title:'Clinical Frailty Score (CFS 1–9)',
+  summary:'Clasificación basal de fragilidad con iconos y recomendación.',
+  tags:['Fragilidad','Triaje'], href:'#/tool/cfs' }
+
 const BASE = (import.meta as any).env.BASE_URL;
 
 const DOCS = [
@@ -77,6 +82,7 @@ export default function App(){
   if(view.startsWith('/tool/heparin-adjust')) return <HeparinAdjustTool goHome={()=>{window.location.hash=''}}/>
   if(view.startsWith('/tool/grace')) return <GraceTool goHome={()=>{window.location.hash=''}}/>
   if(view.startsWith('/tool/sofa')) return <SOFATool goHome={()=>{window.location.hash=''}}/>
+  if(view.startsWith('/tool/cfs')) return <CFSTool goHome={()=>{window.location.hash=''}}/>
 
   return (<div className='min-h-screen w-full bg-gradient-to-b from-white to-slate-50'><header className='sticky top-0 z-30 backdrop-blur bg-white/70 border-b'><div className='max-w-6xl mx-auto flex items-center gap-3 p-3'><HeartPulse className='h-6 w-6'/><div className='flex-1'><h1 className='text-xl font-semibold'>CardiacCriticalCare</h1><p className='text-xs text-slate-500'>Portafolio UCI cardiológica • v0.3</p></div><div className='flex items-center gap-2 w-full max-w-md'><div className='relative w-full'><Search className='absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400'/><Input value={q} onChange={(e)=>setQ(e.target.value)} placeholder='Buscar herramienta...' className='pl-8'/></div><Button variant='outline' size='icon' title='Ajustes'><Settings className='h-4 w-4'/></Button></div></div></header><main className='max-w-6xl mx-auto p-4 sm:p-6 space-y-8'>
     {/* --- Pestañas sin componente Tabs (fiable) --- */}
@@ -335,6 +341,32 @@ function SOFATool({goHome}:{goHome:()=>void}) {
           <CardHeader><CardTitle className='text-base'>Calculadora</CardTitle></CardHeader>
           <CardContent>
             <SOFACalculator />
+          </CardContent>
+        </Card>
+      </main>
+    </div>
+  );
+}
+function CFSTool({goHome}:{goHome:()=>void}) {
+  return (
+    <div className='min-h-screen w-full bg-white'>
+      <header className='border-b sticky top-0 bg-white/70 backdrop-blur z-30'>
+        <div className='max-w-3xl mx-auto flex items-center justify-between p-3'>
+          <div className='flex items-center gap-2'>
+            <HeartPulse className='h-5 w-5'/>
+            <h2 className='font-semibold'>Clinical Frailty Score (CFS 1–9)</h2>
+          </div>
+          <Button variant='outline' size='sm' onClick={goHome}>← Volver</Button>
+        </div>
+      </header>
+
+      <main className='max-w-3xl mx-auto p-4 space-y-6'>
+        <Card>
+          <CardHeader><CardTitle className='text-base'>Formulario</CardTitle></CardHeader>
+        </Card>
+        <Card>
+          <CardContent>
+            <ClinicalFrailtyForm />
           </CardContent>
         </Card>
       </main>
