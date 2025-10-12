@@ -97,108 +97,107 @@ export default function App(){
   if(view.startsWith('/tool/sofa')) return <SOFATool goHome={()=>{window.location.hash=''}}/>
   if(view.startsWith('/tool/cfs')) return <CFSTool goHome={()=>{window.location.hash=''}}/>
 
- return (
-  <div className="min-h-screen w-full bg-gradient-to-b from-white to-slate-50">
-    <header className="sticky top-0 z-30 backdrop-blur bg-white/70 border-b">
-      <div className="max-w-6xl mx-auto flex items-center gap-3 p-3">
-
-        {/* Logo corazón estilizado + texto */}
-        <div className="flex items-center gap-2">
-          <img
-  src="/CardiacCriticalCare_PWA/icon-192.png"
-  alt="Logo CCC"
-  className="h-8 w-8"
-/>
-          <span className="text-xl font-bold">H. Ramón y Cajal</span>
+  return (
+    <div className="min-h-screen w-full bg-gradient-to-b from-white to-slate-50">
+      <header className="sticky top-0 z-30 backdrop-blur bg-white/70 border-b">
+        <div className="max-w-6xl mx-auto flex items-center gap-3 p-3">
+          {/* Logo corazón estilizado + texto */}
+          <div className="flex items-center gap-2">
+            {/* Usa BASE_URL para que funcione en GitHub Pages */}
+            <img
+              src={`${BASE}icon-192.png`}
+              alt="Logo CCC"
+              className="h-8 w-8"
+            />
+            <span className="text-xl font-bold">H. Ramón y Cajal</span>
+          </div>
         </div>
+      </header>
 
-      </div>
-    </header>
+      {/* Contenido principal con pestañas */}
+      <main className="max-w-6xl mx-auto p-4">
+        {/* --- Pestañas sin componente Tabs (fiable) --- */}
+        <div>
+          {/* Barra de pestañas */}
+          <div className="grid grid-cols-4 w-full rounded-2xl bg-slate-100 p-1">
+            <button
+              onClick={() => setTab('calculadoras')}
+              className={
+                'flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm ' +
+                (tab === 'calculadoras' ? 'bg-white shadow' : 'text-slate-600 hover:text-slate-900')
+              }
+            >
+              <Calculator className="h-4 w-4" /> Calculadoras
+            </button>
+            <button
+              onClick={() => setTab('formularios')}
+              className={
+                'flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm ' +
+                (tab === 'formularios' ? 'bg-white shadow' : 'text-slate-600 hover:text-slate-900')
+              }
+            >
+              <Stethoscope className="h-4 w-4" /> Formularios
+            </button>
+            <button
+              onClick={() => setTab('documentos')}
+              className={
+                'flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm ' +
+                (tab === 'documentos' ? 'bg-white shadow' : 'text-slate-600 hover:text-slate-900')
+              }
+            >
+              <FileText className="h-4 w-4" /> Documentos
+            </button>
+            <button
+              onClick={() => setTab('docencia')}
+              className={
+                'flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm ' +
+                (tab === 'docencia' ? 'bg-white shadow' : 'text-slate-600 hover:text-slate-900')
+              }
+            >
+              <BookOpen className="h-4 w-4" /> Docencia
+            </button>
+          </div>
 
-    {/* ...resto de tu App */}
-  </div>
-)
+          {/* Contenidos */}
+          {tab === 'calculadoras' && (
+            <div className="mt-6">
+              <SectionHeader icon={Calculator} title="Calculadoras" hint={`${filtered.calculadoras.length} elementos`} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filtered.calculadoras.map((item:any) => <ToolCard key={item.id} item={item} />)}
+              </div>
+            </div>
+          )}
 
-    {/* --- Pestañas sin componente Tabs (fiable) --- */}
-<div>
-  {/* Barra de pestañas */}
-  <div className="grid grid-cols-4 w-full rounded-2xl bg-slate-100 p-1">
-    <button
-      onClick={() => setTab('calculadoras')}
-      className={
-        'flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm ' +
-        (tab === 'calculadoras' ? 'bg-white shadow' : 'text-slate-600 hover:text-slate-900')
-      }
-    >
-      <Calculator className="h-4 w-4" /> Calculadoras
-    </button>
-    <button
-      onClick={() => setTab('formularios')}
-      className={
-        'flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm ' +
-        (tab === 'formularios' ? 'bg-white shadow' : 'text-slate-600 hover:text-slate-900')
-      }
-    >
-      <Stethoscope className="h-4 w-4" /> Formularios
-    </button>
-    <button
-      onClick={() => setTab('documentos')}
-      className={
-        'flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm ' +
-        (tab === 'documentos' ? 'bg-white shadow' : 'text-slate-600 hover:text-slate-900')
-      }
-    >
-      <FileText className="h-4 w-4" /> Documentos
-    </button>
-    <button
-      onClick={() => setTab('docencia')}
-      className={
-        'flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm ' +
-        (tab === 'docencia' ? 'bg-white shadow' : 'text-slate-600 hover:text-slate-900')
-      }
-    >
-      <BookOpen className="h-4 w-4" /> Docencia
-    </button>
-  </div>
+          {tab === 'formularios' && (
+            <div className="mt-6">
+              <SectionHeader icon={Stethoscope} title="Formularios" hint={`${filtered.formularios.length} elementos`} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filtered.formularios.map((item:any) => <ToolCard key={item.id} item={item} />)}
+              </div>
+            </div>
+          )}
 
-  {/* Contenidos */}
-  {tab === 'calculadoras' && (
-    <div className="mt-6">
-      <SectionHeader icon={Calculator} title="Calculadoras" hint={`${filtered.calculadoras.length} elementos`} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.calculadoras.map((item:any) => <ToolCard key={item.id} item={item} />)}
-      </div>
+          {tab === 'documentos' && (
+            <div className="mt-6">
+              <SectionHeader icon={FileText} title="Documentos" hint={`${filtered.documentos.length} elementos`} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filtered.documentos.map((item:any) => <ToolCard key={item.id} item={item} />)}
+              </div>
+            </div>
+          )}
+
+          {tab === 'docencia' && (
+            <div className="mt-6">
+              <SectionHeader icon={BookOpen} title="Docencia" hint={`${filtered.docencia.length} elementos`} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filtered.docencia.map((item:any) => <ToolCard key={item.id} item={item} />)}
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
     </div>
-  )}
-
-  {tab === 'formularios' && (
-    <div className="mt-6">
-      <SectionHeader icon={Stethoscope} title="Formularios" hint={`${filtered.formularios.length} elementos`} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.formularios.map((item:any) => <ToolCard key={item.id} item={item} />)}
-      </div>
-    </div>
-  )}
-
-  {tab === 'documentos' && (
-    <div className="mt-6">
-      <SectionHeader icon={FileText} title="Documentos" hint={`${filtered.documentos.length} elementos`} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.documentos.map((item:any) => <ToolCard key={item.id} item={item} />)}
-      </div>
-    </div>
-  )}
-
-  {tab === 'docencia' && (
-    <div className="mt-6">
-      <SectionHeader icon={BookOpen} title="Docencia" hint={`${filtered.docencia.length} elementos`} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.docencia.map((item:any) => <ToolCard key={item.id} item={item} />)}
-      </div>
-    </div>
-  )}
-</div>
-</main></div>)
+  );
 }
 
 
