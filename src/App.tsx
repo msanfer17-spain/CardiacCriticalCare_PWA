@@ -70,8 +70,30 @@ const DOCS = [
     tags: ["Ventilación","Unidad Críticos CV"],
     href: BASE + "docs/Protocolo_Reclutamiento_Escalera.pdf",
   },
-];
+  {
+  id: "checklist-lvad",
+  title: "Checklist_preoperatorio_LVAD",
+  summary: "Lista de verificación preoperatoria previo implante LVAD",
+  tags: ["LVAD","Checklist"],
+  href: BASE + "docs/Checklist_preoperatorio_LVAD.pdf",
+},
+// Ejemplos para los otros dos
+{
+  id: "protocolo-lvad",
+  title: "Protocolo_LVAD_RyC",
+  summary: "Protocolo detallado de elección del paciente y manejo",
+  tags: ["LVAD","Protocolo"],
+  href: BASE + "docs/Protocolo_LVAD_RyC.pdf",
+},
+{
+  id: "Checklist_Impella_CP",
+  title: "Checklist_Bundle_Impella_CP",
+  summary: "Checklist para pacientes con Impella",
+  tags: ["Protocolo","Impella","Asistencia"],
+  href: BASE + "docs/Checklist_Bundle_Impella_CP.pdf",
+},
 
+];
 
 const TEACHING: any[] = [];
 
