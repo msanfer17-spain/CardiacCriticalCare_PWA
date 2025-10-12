@@ -11,3 +11,5 @@ tnpm run build
 
 ## GitHub Pages
 Ajusta base en vite.config.ts y publica dist en gh-pages.
+# test commit para desbloquear workflows
+
