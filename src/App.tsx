@@ -7,7 +7,7 @@ import { Badge } from './components/ui/badge'
 import GraceCalculator from "./components/ui/scores/GraceCalculator";
 import SOFACalculator from "./components/ui/scores/SOFACalculator";
 import ClinicalFrailtyForm from "./components/ui/forms/ClinicalFrailtyForm";
-
+import LVADRiskForm from "./components/ui/forms/LVADRiskForm";
 
 const CALCULATORS = [
   { id:'pac-hemo', title:'PAC (Swan‑Ganz): cálculos hemodinámicos', summary:'IMC/SC, CO/CI, SV/SVI, SVR/PVR (dyn/WU), CPO, PAPi, AD/PCP.', tags:['Hemodinámica','Swan‑Ganz','UCI'], href:'#/tool/pac-hemo' },
@@ -36,7 +36,14 @@ const FORMS = [
     tags:['Fragilidad','Triaje'],
     href:'#/tool/cfs'
   }
-];
+{
+  id: "lvad-risk",
+  title: "LVAD · Riesgo de fallo VD",
+  summary:
+    "Evaluación pre-LVAD del riesgo de fallo ventricular derecho: EUROMACS, ALMA, CRITT, Michigan, MELD-XI, STOP-RVF y hemodinámica.",
+  tags: ["LVAD", "VD", "HeartMate 3", "RHF"],
+  href: "#/tool/lvad-risk",
+},];
 
 
 const BASE = (import.meta as any).env.BASE_URL;
@@ -118,6 +125,7 @@ export default function App(){
   if(view.startsWith('/tool/grace')) return <GraceTool goHome={()=>{window.location.hash=''}}/>
   if(view.startsWith('/tool/sofa')) return <SOFATool goHome={()=>{window.location.hash=''}}/>
   if(view.startsWith('/tool/cfs')) return <CFSTool goHome={()=>{window.location.hash=''}}/>
+if(view.startsWith('/tool/lvad-risk'))  return <LVADRiskTool goHome={()=>{window.location.hash=''}}/>
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-white to-slate-50">
@@ -422,6 +430,48 @@ function CFSTool({goHome}:{goHome:()=>void}) {
         <Card>
           <CardContent>
             <ClinicalFrailtyForm />
+          </CardContent>
+        </Card>
+      </main>
+    </div>
+  );
+}
+function LVADRiskTool({ goHome }: { goHome: () => void }) {
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-card">
+        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
+          <HeartPulse className="h-6 w-6 text-primary" />
+
+          <div className="flex-1">
+            <h1 className="text-lg font-semibold">
+              LVAD · Riesgo de fallo ventricular derecho
+            </h1>
+
+            <p className="text-sm text-muted-foreground">
+              Evaluación multimodal preoperatoria
+            </p>
+          </div>
+
+          <Button
+            variant="outline"
+            onClick={goHome}
+          >
+            Volver
+          </Button>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-7xl p-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              Evaluación pre-LVAD del ventrículo derecho
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <LVADRiskForm />
           </CardContent>
         </Card>
       </main>
