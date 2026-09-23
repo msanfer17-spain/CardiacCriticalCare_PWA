@@ -35,7 +35,7 @@ const FORMS = [
     summary:'Clasificación basal de fragilidad con iconos y recomendación.',
     tags:['Fragilidad','Triaje'],
     href:'#/tool/cfs'
-  }
+  },
 {
   id: "lvad-risk",
   title: "LVAD · Riesgo de fallo VD",
